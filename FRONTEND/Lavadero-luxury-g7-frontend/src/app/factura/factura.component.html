@@ -1,0 +1,219 @@
+<!-- Contenedor principal -->
+<div class="d-flex">
+  <app-menu></app-menu>
+
+  <div class="content-area flex-grow-1 d-flex flex-column">
+    <app-navbar></app-navbar>
+
+    <!-- filtrar -->
+    <form class="filtros-form" (ngSubmit)="aplicarFiltros()">
+      <input type="date" [(ngModel)]="filtros.fechaInicio" name="fechaInicio" placeholder="Desde" class="input-filtro" />
+      <input type="date" [(ngModel)]="filtros.fechaFin" name="fechaFin" placeholder="Hasta" class="input-filtro" />
+      <input type="text" [(ngModel)]="filtros.placa" name="placa" placeholder="Vehículo" class="input-filtro" />
+      <input type="text" [(ngModel)]="filtros.documento" name="documento" placeholder="Documento" class="input-filtro" />
+      <select [(ngModel)]="filtros.tipoVehiculo" name="tipoVehiculo" class="input-filtro">
+        <option value="">Tipo de vehículo</option>
+        <option value="Carro">Carro</option>
+        <option value="Moto">Moto</option>
+        <option value="Bus">Bus</option>
+      </select>
+      <select [(ngModel)]="filtros.servicio" name="servicio" class="input-filtro">
+        <option value="">Tipo de servicio</option>
+        <option value="Lavado Express $100.000">Lavado Express</option>
+        <option value="Lavado a vapor $110.000">Lavado a vapor</option>
+        <option value="Lavado completo $100.000">Lavado completo</option>
+        <option value="Lavado de motor $90.000">Lavado de motor</option>
+        <option value="Lavado interno $90.000">Lavado interno</option>
+        <option value="Lavado básico moto $50.000">Lavado básico moto</option>
+        <option value="Lavado cadena $20.000">Lavado cadena</option>
+        <option value="Engrase $30.000">Engrase</option>
+        <option value="Lavado general bus $50.000">Lavado general bus</option>
+        <option value="Limpieza de asientos $70.000">Limpieza de asientos</option>
+      </select>
+
+      <button type="submit" class="btn btn-primary">Buscar</button>
+      <button type="button" class="btn btn-secondary" (click)="resetFiltros()">Limpiar</button>
+    </form>
+
+    <!-- Lista de Reservas -->
+<div *ngIf="!mostrarDetalle && !mostrarFacturaFinal" class="container mt-4">
+  <h4 class="mb-3">Facturacion</h4>
+  <div *ngFor="let reserva of reservas" class="card mb-2 shadow-sm">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <strong>#{{ reserva.id }}</strong> - {{ reserva.vehiculo?.placa }} - {{ reserva.servicio }} - {{ reserva.fechaReserva | date: 'dd/MM/yyyy' }} - {{ reserva.estado }}
+        -- {{ reserva.metodoPago || 'No registrado' }} -- {{ reserva.user?.nombre || 'Sin nombre' }}
+      </div>
+      <div>
+        <button class="btn btn-sm btn-primary" (click)="verDetalle(reserva)">Ver Detalle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detalle de Reserva -->
+<div *ngIf="mostrarDetalle && !mostrarFacturaFinal" class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Detalle de la Factura</h5>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="reservaSeleccionada">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <p><strong>N° Reserva:</strong> #{{ reservaSeleccionada.id }}</p>
+            <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>Método de Pago:</strong> {{ metodoPago || 'No seleccionado' }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Vehículo:</strong> {{ reservaSeleccionada.vehiculo?.placa || 'Sin placa' }}</p>
+            <p><strong>Modelo:</strong> {{ reservaSeleccionada.vehiculo?.modelo || 'Sin modelo' }}</p>
+            <p><strong>Servicio:</strong> {{ reservaSeleccionada.servicio }}</p>
+          </div>
+        </div>
+
+        <div class="alert alert-info mb-3">
+          Subtotal Servicio: <strong>${{ reservaSeleccionada.precio }}</strong>
+        </div>
+
+        <h6 class="mb-2">Productos adicionales</h6>
+        <div class="row">
+          <div class="col-md-6" *ngFor="let producto of productosLavadero">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="producto.nombre"
+                [value]="producto"
+                [disabled]="reservaSeleccionada.facturada"
+                (change)="actualizarProductosSeleccionados($event, producto)"
+              />
+              <label class="form-check-label" [for]="producto.nombre">
+                {{ producto.nombre }} - ${{ producto.precio }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="productosSeleccionados.length > 0" class="mt-3">
+          <h6>Productos Seleccionados:</h6>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between" *ngFor="let prod of productosSeleccionados">
+              {{ prod.nombre }} <span>${{ prod.precio }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="mb-3">
+          <h6>Método de Pago</h6>
+          <div class="d-flex flex-wrap gap-3">
+            <div *ngFor="let metodo of metodosPago" class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="metodoPago"
+                [id]="'metodoPago' + metodo"
+                [value]="metodo"
+                [(ngModel)]="metodoPago"
+                [disabled]="reservaSeleccionada.facturada"
+              />
+              <label class="form-check-label" [for]="'metodoPago' + metodo">
+                {{ metodo }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <h5>Total a Pagar: <span class="text-success">${{ calcularTotal() }}</span></h5>
+        </div>
+
+        <div *ngIf="reservaSeleccionada.facturada" class="alert alert-warning mt-3">
+          Esta reserva ya ha sido facturada.
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" (click)="cerrarDetalle()">Cancelar</button>
+          <button
+            class="btn btn-success"
+            (click)="generarFactura()"
+            [disabled]="reservaSeleccionada.facturada || !metodoPago"
+          >
+            Generar Factura
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Factura Final -->
+ <div id="facturaPDF">
+
+
+<div *ngIf="mostrarFacturaFinal" class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-light text-center">
+      <h4 class="mb-0">Factura de Servicio</h4>
+      <small class="text-muted">Fecha: {{ getFechaActual() }}</small>
+    </div>
+
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p><strong>N° Reserva:</strong> #{{ reservaSeleccionada.id }}</p>
+          <p><strong>Fecha de Reserva:</strong> {{ reservaSeleccionada.fechaReserva | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Vehículo:</strong> {{ reservaSeleccionada.vehiculo?.placa }}</p>
+          <p><strong>Modelo:</strong> {{ reservaSeleccionada.vehiculo?.modelo }}</p>
+          <p><strong>Tipo:</strong> {{ reservaSeleccionada.vehiculo?.tipo }}</p>
+        </div>
+      </div>
+
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Concepto</th>
+            <th class="text-end">Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>{{ reservaSeleccionada.servicio }}</td>
+            <td class="text-end">${{ reservaSeleccionada.precio }}</td>
+
+            </tr>
+          <tr *ngFor="let prod of productosSeleccionados">
+            <td>{{ prod.nombre }}</td>
+            <td class="text-end">${{ prod.precio }}</td>
+          </tr>
+        </tbody>
+        <tfoot class="table-light">
+          <tr>
+            <td><strong>Total</strong></td>
+            <td class="text-end"><strong>${{ calcularTotal() }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p><strong>Método de Pago:</strong> {{ metodoPago }}</p>
+    </div>
+
+    <div class="card-footer text-center">
+      <p class="mb-0 text-success fw-bold">¡Gracias por preferirnos!</p>
+    </div>
+  </div>
+  <div class="mt-3 text-end">
+    <button class="btn btn-danger me-2" (click)="exportarPDF()">Exportar a PDF</button>
+    <button class="btn btn-secondary" (click)="cerrarFacturaFinal()">Cerrar</button>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+

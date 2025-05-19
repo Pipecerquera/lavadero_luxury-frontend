@@ -1,0 +1,25 @@
+
+        .footer {
+            display: flex;
+            background-color: #f0f0f0;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-top: 1px solid #ccc;
+            margin-top: 40px;
+        }
+        .footer-logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .footer input[type="email"] {
+            width: 100%;
+            max-width: 300px;
+        }
+        .footer a {
+            text-decoration: none;
+            color: black;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }

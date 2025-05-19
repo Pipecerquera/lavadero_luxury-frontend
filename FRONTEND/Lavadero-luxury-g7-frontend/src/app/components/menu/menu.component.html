@@ -1,0 +1,30 @@
+<div class="sidebar d-flex flex-column">
+  <h3 class="text-center py-3">Lavadero Luxury</h3>
+  <ul class="nav flex-column px-2">
+    <li class="nav-item">
+      <a href="/precio-servicio" class="nav-link active"
+        >💲 Precio del servicio</a
+      >
+    </li>
+    <li class="nav-item" *ngIf="userRole === 'admin'">
+      <a href="factura" class="nav-link">🛒 Factura</a>
+    </li>
+    <li class="nav-item" *ngIf="userRole === 'admin'">
+      <a href="/gestionventas" class="nav-link">📊 Gestion ventas</a>
+    </li>        
+    <li class="nav-item">
+      <a href="/registro-vehiculo" class="nav-link">🚗 Registrar vehículo</a>
+    </li>
+    <li class="nav-item">
+      <a href="/nosotros" class="nav-link">ℹ️ Acerca de nosotros</a>
+    </li>
+    <li class="nav-item">
+      <a href="/historial" class="nav-link">📜 Historial</a></li>
+    <li class="nav-item">
+      <a href="/reserva" class="nav-link">🔙 Reserva </a>
+    </li>
+    <li class="nav-item">
+      <a href="#" class="nav-link text-danger fw-bold">🚪 Cerrar sesión</a>
+    </li>
+  </ul>
+</div>

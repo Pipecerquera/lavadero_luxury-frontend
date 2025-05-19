@@ -1,0 +1,100 @@
+<div class="d-flex">
+  <!-- Barra lateral -->
+  <app-menu></app-menu>
+
+  <!-- Contenido principal -->
+  <div class="content-area flex-grow-1 d-flex flex-column">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+    <!-- Contenido central -->
+    <div class="main-content d-flex justify-content-center align-items-center flex-grow-1">
+      <div class="form-container">
+
+        <h4 class="text-center mb-3">Registrar Reserva</h4>
+
+        <!-- Formulario inicial -->
+        <form *ngIf="!reservaSeleccionada" (submit)="crearreserva()">
+          <div class="mb-3">
+            <label class="form-label">Vehículo</label>
+            <select
+              class="form-select"
+              [(ngModel)]="RegisVehiculo.vehiculo.id"
+              name="vehiculoId"
+              (change)="onVehiculoSeleccionado(RegisVehiculo.vehiculo.id)"
+              required
+            >
+              <option disabled selected>Seleccione su vehículo</option>
+              <option *ngFor="let item of vehiculos" [value]="item.id">
+                {{ item.placa }} - {{ item.modelo }} - {{ item.color }} - {{ item.tipo }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Fecha de la Reserva</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="RegisVehiculo.fecha"
+              name="fecha"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tipo de servicios</label>
+            <select
+              class="form-select"
+              [(ngModel)]="RegisVehiculo.tipo"
+              name="tipo"
+              required
+            >
+              <option [ngValue]="null" disabled selected>Seleccione una opción</option>
+              <option *ngFor="let tipo of tiposServicio" [ngValue]="tipo">
+                {{ tipo }}
+              </option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            Registrar Reserva
+          </button>
+        </form>
+
+        <!-- Paso 1: Mostrar opciones de pago -->
+        <div *ngIf="reservaSeleccionada && !mostrarFactura" class="alert alert-info mt-4">
+          <h5 class="mb-3">Resumen de la Reserva</h5>
+          <p><strong>ID:</strong> {{ reservaSeleccionada.id }}</p>
+          <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva }}</p>
+          <p><strong>Servicio:</strong> {{ reservaSeleccionada.servicio }}</p>
+
+          <h5 class="mt-4">Selecciona un método de pago</h5>
+          <div class="btn-group w-100 mt-2" role="group">
+            <button class="btn btn-outline-primary" (click)="mostrarResumenPago('Tarjeta')">Tarjeta</button>
+            <button class="btn btn-outline-secondary" (click)="mostrarResumenPago('PayPal')">Transferencia</button>
+            <button class="btn btn-outline-success" (click)="mostrarResumenPago('Efectivo')">Efectivo</button>
+          </div>
+        </div>
+
+        <!-- Paso 2: Mostrar factura final -->
+        <div *ngIf="mostrarFactura" class="alert alert-success mt-4">
+          <h5>Factura de la Reserva</h5>
+          <p><strong>N° Reserva:</strong> {{ reservaSeleccionada.id }}</p>
+          <p><strong>Vehículo:</strong> {{ reservaSeleccionada.vehiculo.placa }}</p>
+          <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva }}</p>
+          <p><strong>Servicio:</strong> {{ reservaSeleccionada.servicio }}</p>
+          <p><strong>Método de Pago:</strong> {{ metodoPago }}</p>
+          <p><strong>Estado:</strong> {{ reservaSeleccionada.estado }}</p>
+
+          <button class="btn btn-outline-primary mt-3 w-100" (click)="nuevaReserva()">
+            Registrar Otra Reserva
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,90 @@
+<div class="d-flex">
+  <!-- Barra lateral -->
+  <app-menu></app-menu>
+
+  <!-- Contenido principal -->
+  <div class="content-area flex-grow-1 d-flex flex-column">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+    <!-- Contenido central -->
+    <div class="main-content d-flex justify-content-center align-items-center flex-grow-1">
+      <div class="form-container w-100" style="max-width: 600px;">
+        <h4 class="text-center mb-3">Registro de Venta Directa</h4>
+
+        <form [formGroup]="formulario" (ngSubmit)="registrarVenta()">
+          <div class="mb-3">
+            <label for="placa" class="form-label">Placa</label>
+            <input id="placa" class="form-control" formControlName="placa" />
+          </div>
+
+          <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de Vehículo</label>
+            <select id="tipo" class="form-select" formControlName="tipo" (change)="cargarTiposServicioPorVehiculo($event.target.value)">
+              <option value="" disabled selected>Seleccione</option>
+              <option *ngFor="let tipo of tiposVehiculo" [value]="tipo">{{ tipo }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="marca" class="form-label">Marca</label>
+            <input id="marca" class="form-control" formControlName="marca" />
+          </div>
+
+          <div class="mb-3">
+            <label for="modelo" class="form-label">Modelo</label>
+            <input id="modelo" class="form-control" formControlName="modelo" />
+          </div>
+
+          <div class="mb-3">
+            <label for="servicio" class="form-label">Tipo de Servicio</label>
+            <select id="servicio" class="form-select" formControlName="servicio">
+              <option value="" disabled selected>Seleccione</option>
+              <option *ngFor="let servicio of tiposServicio" [value]="servicio">{{ servicio }}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            Registrar venta
+          </button>
+        </form>
+
+        <!-- Paso 1: Mostrar opciones de pago -->
+        <div *ngIf="reservaSeleccionada && !mostrarFactura" class="alert alert-info mt-4">
+          <h5 class="mb-3">Resumen de la Reserva</h5>
+          <p><strong>ID:</strong> {{ reservaSeleccionada.id }}</p>
+          <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva }}</p>
+          <p><strong>Servicio:</strong> {{ reservaSeleccionada.servicio }}</p>
+
+          <h5 class="mt-4">Selecciona un método de pago</h5>
+          <div class="btn-group w-100 mt-2" role="group">
+            <button class="btn btn-outline-primary" (click)="mostrarResumenPago('Tarjeta')">Tarjeta</button>
+            <button class="btn btn-outline-secondary" (click)="mostrarResumenPago('PayPal')">Transferencia</button>
+            <button class="btn btn-outline-success" (click)="mostrarResumenPago('Efectivo')">Efectivo</button>
+          </div>
+        </div>
+
+        <!-- Paso 2: Mostrar factura final -->
+        <div *ngIf="mostrarFactura" class="alert alert-success mt-4">
+          <h5>Factura de la Reserva</h5>
+          <p><strong>N° Reserva:</strong> {{ reservaSeleccionada.id }}</p>
+          <p><strong>Vehículo:</strong> {{ reservaSeleccionada.vehiculo.placa }}</p>
+          <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaReserva }}</p>
+          <p><strong>Servicio:</strong> {{ reservaSeleccionada.servicio }}</p>
+          <p><strong>Método de Pago:</strong> {{ metodoPago }}</p>
+          <p><strong>Estado:</strong> {{ reservaSeleccionada.estado }}</p>
+
+          <button class="btn btn-outline-primary mt-3 w-100" (click)="nuevaReserva()">
+            Registrar Otra Reserva
+          </button>
+        </div>
+
+        <div class="mt-3 alert alert-info text-center" *ngIf="mensaje">
+          {{ mensaje }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

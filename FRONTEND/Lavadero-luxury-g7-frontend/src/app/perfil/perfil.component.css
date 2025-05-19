@@ -1,0 +1,87 @@
+/* Barra lateral */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1) ;
+    padding: 0;
+    
+}
+
+.nav-link {
+    color: #000000;
+    font-size: 16px;
+    padding: 12px;
+    
+}
+
+
+.nav-link:hover {
+    background: #f1f1f1;
+}
+
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    
+}
+
+/* Navbar */
+.navbar {
+    padding: 15px 20px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 250px;
+}
+
+.search-box i {
+    margin-right: 10px;
+    color: #999;
+}
+
+.search-box .form-control {
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: calc(100vh - 60px); /* Ajusta la altura del contenido sin navbar */
+}
+
+.profile-card {
+    width: 100%;
+    max-width: 400px; /* Ancho máximo del formulario */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #6c757d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .navbar,
+    .main-content {
+        margin-left: 0;
+    }
+}

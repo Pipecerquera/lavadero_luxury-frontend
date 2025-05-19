@@ -1,0 +1,104 @@
+<div class="d-flex">
+  <!-- Barra lateral -->
+  <app-menu></app-menu>
+
+  <!-- Contenido principal -->
+  <div class="content-area">
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+
+    <!-- filtrar -->
+    <form class="filtros-form" (ngSubmit)="aplicarFiltros()">
+      <input type="date" [(ngModel)]="filtros.fechaInicio" name="fechaInicio" placeholder="Desde" class="input-filtro" />
+      <input type="date" [(ngModel)]="filtros.fechaFin" name="fechaFin" placeholder="Hasta" class="input-filtro" />
+      <input type="text" [(ngModel)]="filtros.placa" name="placa" placeholder="Vehículo" class="input-filtro" />
+      <input type="text" [(ngModel)]="filtros.documento" name="documento" placeholder="Documento" class="input-filtro" />
+      <select [(ngModel)]="filtros.tipoVehiculo" name="tipoVehiculo" class="input-filtro">
+        <option value="">Tipo de vehículo</option>
+        <option value="Carro">Carro</option>
+        <option value="Moto">Moto</option>
+        <option value="Bus">Bus</option>
+      </select>
+      <select [(ngModel)]="filtros.servicio" name="servicio" class="input-filtro">
+        <option value="">Tipo de servicio</option>
+        <option value="Lavado Express $100.000">Lavado Express</option>
+        <option value="Lavado a vapor $110.000">Lavado a vapor</option>
+        <option value="Lavado completo $100.000">Lavado completo</option>
+        <option value="Lavado de motor $90.000">Lavado de motor</option>
+        <option value="Lavado interno $90.000">Lavado interno</option>
+        <option value="Lavado básico moto $50.000">Lavado básico moto</option>
+        <option value="Lavado cadena $20.000">Lavado cadena</option>
+        <option value="Engrase $30.000">Engrase</option>
+        <option value="Lavado general bus $50.000">Lavado general bus</option>
+        <option value="Limpieza de asientos $70.000">Limpieza de asientos</option>
+      </select>
+
+      <button type="submit" class="btn btn-primary">Buscar</button>
+      <button type="button" class="btn btn-secondary" (click)="resetFiltros()">Limpiar</button>
+    </form>
+
+    <!-- Contenido central -->
+    <div class="main-content">
+      <h2 class="titulo">
+        {{ isAdmin ? 'Historial de Reservas (Admin)' : 'Tu Historial de Reservas' }}
+      </h2>
+
+      <div *ngIf="reservas.length > 0; else noReservas">
+        <table class="tabla-reservas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha Reserva</th>
+              <th>Estado</th>
+              <th>Servicio</th>
+              <th>Método de Pago</th>
+              <th *ngIf="isAdmin">Usuario</th>
+              <th colspan="2">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reserva of reservas">
+              <td>{{ reserva.id }}</td>
+              <td>{{ reserva.fechaReserva | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <span [ngClass]="
+                  reserva.estado === 'Confirmada' ? 'badge-confirmada' :
+                  reserva.estado === 'Cancelada' ? 'badge-cancelada' :
+                  'badge-pendiente'
+                ">
+                  {{ reserva.estado }}
+                </span>
+              </td>
+              <td>{{ reserva.servicio }}</td>
+              <td>{{ reserva.metodoPago || 'No registrado' }}</td>
+              <td *ngIf="isAdmin">{{ reserva.user?.nombre || 'Sin nombre' }}</td>
+              <td>
+                <button class="btn btn-eliminar"
+                        [disabled]="reserva.estado === 'Cancelada'"
+                        (click)="eliminarReserva(reserva.id)">
+                  Eliminar
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-editar"
+                        [disabled]="reserva.estado === 'Cancelada'"
+                        (click)="actualizarReserva(reserva.id, 'cancelado')">
+                  Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noReservas>
+        <div class="alert-info">
+          No hay reservas disponibles.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

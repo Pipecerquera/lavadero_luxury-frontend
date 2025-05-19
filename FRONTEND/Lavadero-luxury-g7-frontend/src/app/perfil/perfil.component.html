@@ -1,0 +1,37 @@
+<div class="d-flex">
+  <!-- Barra lateral -->
+  <app-menu></app-menu>
+
+  <!-- Contenido principal -->
+  <div class="content-area flex-grow-1 d-flex flex-column">
+    <!-- Navbar -->
+    <app-navbar>  </app-navbar>
+
+    <!-- Contenido central -->
+    <div class="container py-5">
+      <div class="card shadow rounded-4 mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Mi Perfil</h3>
+    
+          <div *ngIf="usuario; else sinUsuario">
+            <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+            <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+            <p><strong>Celular:</strong> {{ usuario.celular }}</p>
+            <p><strong>Cédula:</strong> {{ usuario.cedula }}</p>
+            <p><strong>Tipo de Cédula:</strong> {{ usuario.tipoCedula }}</p>
+            <p><strong>Rol:</strong> {{ usuario.rol }}</p>
+    
+            <button class="btn btn-outline-danger w-100 mt-3" (click)="cerrarSesion()">Cerrar Sesión</button>
+          </div>
+    
+          <ng-template #sinUsuario>
+            <p class="text-center">No se encontró información del usuario.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+</div>
+<app-footer></app-footer>

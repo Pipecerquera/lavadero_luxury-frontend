@@ -1,0 +1,28 @@
+<div class="d-flex flex-column min-vh-100">
+  <app-navbar></app-navbar>
+
+  <div class="d-flex flex-grow-1">
+    <app-menu></app-menu>
+
+    <div class="info-container container py-5 px-4">
+      <h1 class="text-center mb-5">{{ titulo }}</h1>
+
+      <section class="section mb-5">
+        <h2 class="section-title">¿Quiénes somos?</h2>
+        <p class="section-text">{{ descripcion }}</p>
+      </section>
+
+      <section class="section mb-5">
+        <h2 class="section-title">Misión</h2>
+        <p class="section-text">{{ mision }}</p>
+      </section>
+
+      <section class="section mb-5">
+        <h2 class="section-title">Visión</h2>
+        <p class="section-text">{{ vision }}</p>
+      </section>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
