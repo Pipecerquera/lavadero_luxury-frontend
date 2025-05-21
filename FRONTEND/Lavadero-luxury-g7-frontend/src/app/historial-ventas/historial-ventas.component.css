@@ -1,0 +1,83 @@
+/* Add your CSS styles for historial-ventas.component here */
+
+.d-flex {
+  display: flex;
+}
+
+.content-area {
+  flex: 1;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+.main-content {
+  margin-top: 20px;
+}
+
+.titulo {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.tabla-reservas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tabla-reservas th,
+.tabla-reservas td {
+  border: 1px solid #dee2e6;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.tabla-reservas th {
+  background: #343a40;
+  color: #fff;
+}
+
+.btn-ver {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-ver:hover {
+  background: #0056b3;
+}
+
+.alert-info {
+  background: #e9ecef;
+  color: #495057;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #fff;
+  margin-top: 20px;
+}
+
+.card-header {
+  background: #f1f3f4;
+  padding: 12px 16px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}

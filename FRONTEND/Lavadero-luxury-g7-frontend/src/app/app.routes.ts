@@ -13,6 +13,7 @@ import { HistorialComponent } from './historial/historial.component';
 import { FacturaComponent } from './factura/factura.component';
 import { GestionVentasComponent } from './gestionventas/gestionventas.component';
 import { AcercadenosotrosComponent } from './acercadenosotros/acercadenosotros.component';
+import { HistorialVentasComponent } from './historial-ventas/historial-ventas.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'factura', component: FacturaComponent },
   { path: 'gestionventas', component: GestionVentasComponent},
   { path: 'nosotros', component: AcercadenosotrosComponent },
+  { path: 'historial-ventas', component: HistorialVentasComponent },
 
 
 ];
