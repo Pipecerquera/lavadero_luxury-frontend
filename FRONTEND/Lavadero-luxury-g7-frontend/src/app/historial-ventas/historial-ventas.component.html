@@ -7,17 +7,36 @@
     <!-- Navbar -->
     <app-navbar></app-navbar>
 
-    <!-- Título -->
     <div class="main-content">
       <h2 class="titulo">Historial de Ventas</h2>
 
-      <!-- Tabla de facturas -->
-      <div *ngIf="facturas.length > 0; else noFacturas">
+      <!-- Filtro por fecha -->
+      <div class="filtros-fecha mb-3">
+        <label>Fecha:
+          <input type="date" [(ngModel)]="fechaBusqueda" />
+        </label>
+        <button class="btn btn-primary ms-3" (click)="filtrarPorFecha()">Buscar</button>
+        <button class="btn btn-secondary ms-2" (click)="limpiarFiltro()">Limpiar</button>
+      </div>
+
+      <!-- Opciones adicionales -->
+      <div class="mb-3">
+        <button class="btn btn-success" (click)="verVentasDelDia()">Ver ventas del día</button>
+        <button *ngIf="ventasDelDia.length > 0" class="btn btn-danger ms-2" (click)="exportarVentasDelDiaPDF()">Exportar PDF</button>
+      </div>
+
+      <!-- Total del día -->
+      <div *ngIf="ventasDelDia.length > 0" class="alert alert-success">
+        Total de ventas del día: <strong>${{ totalVentasDelDia.toFixed(2) }}</strong>
+      </div>
+
+      <!-- Tabla -->
+      <div *ngIf="facturasFiltradas.length > 0; else noFacturas">
         <table class="tabla-reservas">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Vehiculo</th>
+              <th>Vehículo</th>
               <th>Fecha</th>
               <th>Método de Pago</th>
               <th>Total</th>
@@ -25,25 +44,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let factura of facturas">
+            <tr *ngFor="let factura of facturasFiltradas">
               <td>{{ factura.id }}</td>
               <td>{{ factura.reserva?.vehiculo?.placa || 'N/A' }}</td>
               <td>{{ factura.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
               <td>{{ factura.metodoPago }}</td>
               <td>${{ factura.total?.toFixed(2) }}</td>
               <td>
-                <button class="btn btn-ver" (click)="verDetalle(factura)">
-                  Ver detalle
-                </button>
+                <button class="btn btn-ver" (click)="verDetalle(factura)">Ver detalle</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Si no hay facturas -->
+      <!-- Sin resultados -->
       <ng-template #noFacturas>
-        <div class="alert-info">No hay facturas registradas.</div>
+        <div class="alert alert-info">No hay facturas para la fecha seleccionada.</div>
       </ng-template>
 
       <!-- Detalle de factura -->
@@ -53,12 +70,12 @@
           <button class="btn-close" (click)="cerrarDetalle()"></button>
         </div>
         <div class="card-body">
-          <p><strong>Vehiculo:</strong> {{ facturaSeleccionada.reserva?.vehiculo?.placa || 'N/A' }}</p>
+          <p><strong>Vehículo:</strong> {{ facturaSeleccionada.reserva?.vehiculo?.placa || 'N/A' }}</p>
           <p><strong>Fecha:</strong> {{ facturaSeleccionada.fechaCreacion | date: 'dd/MM/yyyy' }}</p>
           <p><strong>Método de Pago:</strong> {{ facturaSeleccionada.metodoPago }}</p>
-          <p><strong>Total:</strong> ${{ facturaSeleccionada.total?.toFixed(2) }}</p>
-          <p><strong>Estado de la Reserva:</strong> {{ facturaSeleccionada.reserva?.estado || 'N/A' }}</p>
+          <p><strong>Estado del servicio:</strong> {{ facturaSeleccionada.reserva?.estado || 'N/A' }}</p>
           <p *ngIf="facturaSeleccionada.detalleProductos"><strong>Detalle de Productos:</strong> {{ facturaSeleccionada.detalleProductos }}</p>
+          <p><strong>Total:</strong> ${{ facturaSeleccionada.total?.toFixed(2) }}</p>
         </div>
       </div>
     </div>
